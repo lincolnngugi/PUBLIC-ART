@@ -13,11 +13,17 @@ function fetchArtworks(query = '') {
   const url = `${BASE_URL}?apikey=${API_KEY}&hasimage=1${query}&size=10`;
   return fetch(url)
     .then(res => res.json())
-    .then(data => data.records);
+    .then(data => data.records || []);
 }
 
 function showRandomArtworks() {
-  fetchArtworks('&sort=random').then(displayArtworks);
+  const randomPage = Math.floor(Math.random() * 100) + 1;
+  fetchArtworks(`&page=${randomPage}`)
+    .then(artworks => {
+      const filtered = artworks.filter(art => art.primaryimageurl);
+      displayArtworks(filtered.length ? filtered : artworks);
+    })
+    .catch(err => console.error('Error loading random artworks:', err));
 }
 
 function searchArtworks(e) {
@@ -29,7 +35,14 @@ function searchArtworks(e) {
 
 function displayArtworks(artworks) {
   artList.innerHTML = '';
+  if (!artworks.length) {
+    artList.innerHTML = '<p>No results found.</p>';
+    return;
+  }
+
   artworks.forEach(art => {
+    if (!art.primaryimageurl) return;
+
     const isFavorited = getFavoriteStatus(art.id);
     const card = document.createElement('article');
     card.className = 'art-card';
@@ -38,10 +51,10 @@ function displayArtworks(artworks) {
     card.innerHTML = `
       <h2>${art.title || 'Untitled'}</h2>
       <p><strong>${art.people?.[0]?.name || 'Unknown Artist'}</strong></p>
-      <img src="${art.primaryimageurl}" alt="${art.title}" />
+      <img src="${art.primaryimageurl}" alt="${art.title || 'Artwork'}" />
       <div class="details">
         <p><em>${art.dated || 'No date'}</em></p>
-        <p>${art.description || art.medium || 'No description available'}</p>
+        <p>${art.description || art.medium || 'No description available.'}</p>
       </div>
       <span class="heart ${isFavorited ? 'favorited' : ''}" role="button" aria-label="Heart">&#10084;</span>
     `;
