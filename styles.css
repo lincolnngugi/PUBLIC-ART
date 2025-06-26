@@ -1,0 +1,51 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  padding: 2rem;
+  color: #333;
+}
+
+form {
+  margin-bottom: 1.5rem;
+}
+
+input {
+  padding: 0.5rem;
+  width: 200px;
+  margin-right: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+}
+
+.art-card {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fff;
+  position: relative;
+}
+
+.art-card img {
+  max-width: 100%;
+  height: auto;
+}
+
+.details {
+  display: none;
+  margin-top: 0.5rem;
+}
+
+.heart {
+  cursor: pointer;
+  color: #bbb;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.heart.favorited {
+  color: crimson;
+}
